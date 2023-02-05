@@ -1,7 +1,7 @@
 import shutil
 import gzip
 import os
-from logs import log, error
+from app.utils.logs import log, error
 
 class Decompressor():
     """Classe para descompactar arquivos."""

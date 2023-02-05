@@ -1,9 +1,8 @@
 import requests
 import re
-import time
 
-from utils.logs import log, error
-from utils.decompress import Decompressor
+from app.utils.logs import log, error
+from app.utils.decompress import Decompressor
 
 
 class HttpRequests():
@@ -28,8 +27,6 @@ class HttpRequests():
         # Gera o nome do arquivo a partir da URL
         file_name = re.split(pattern='/', string=url)[-1]
         
-        # Adiciona um timestamp para evitar sobrescrever arquivos
-        file_name = f"{int(time.time())}_{file_name}"
 
         log(f'Baixando de {url}...')
         
@@ -47,6 +44,11 @@ class HttpRequests():
         
         # Verifica se há compressão
         if compression == 'gzip':
-            Decompressor.decompress_gzip(file_name)
+            try:
+                file_name = Decompressor.decompress_gzip(file_name)
+            except (FileExistsError, FileNotFoundError) as e:
+                error(e)
+            
+        log(f'Salvando arquivo {file_name}')
                     
         return file_name
