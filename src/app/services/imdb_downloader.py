@@ -11,7 +11,7 @@ class IMDbDownloader():
         self.http_requests = HttpRequests()
         self.url = 'https://datasets.imdbws.com/'
         
-        self.DATASET_NAMES = ['title.basics', 'title.akas', 'title.principals', 'name.basics']
+        self.DATASET_NAMES = ['title.basics', 'title.akas', 'title.principals', 'name.basics', 'title.ratings']
     
     
     def download_dataset(self, dataset_name: str) -> str:
