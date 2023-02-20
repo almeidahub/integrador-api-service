@@ -1,7 +1,7 @@
 import shutil
 import gzip
 import os
-from app.utils.logs import log, error
+from app.utils.logs import log, error, warning
 
 class Decompressor():
     """Classe para descompactar arquivos."""
@@ -27,7 +27,8 @@ class Decompressor():
 
         # Verifica se o arquivo de saída já existe
         if os.path.exists(file_name_out):
-            raise FileExistsError(f"Arquivo já existe: {file_name_out}")
+            warning(f'Arquivo de saída já existe: {file_name}. Removendo...')
+            os.remove(file_name_out)
         
         log(f'Descompactando arquivo gzip {file_name} para {file_name_out}')
 

@@ -1,4 +1,6 @@
-from app.services.integrator import Integrator
+from app.services.imdb_etl import IMDBETL
 
-def start_app():
-    Integrator.main()
+
+class App():
+    def start_app():
+        IMDBETL.main()

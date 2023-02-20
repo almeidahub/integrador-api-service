@@ -1,7 +1,9 @@
 from app.services.http_requests import HttpRequests
 from multiprocessing.pool import ThreadPool
 from app.utils.logs import log, error
+from app.utils.decompress import Decompressor
 
+from app.settings import DATA_PATH
 
 class IMDbDownloader():
 
@@ -17,15 +19,24 @@ class IMDbDownloader():
         if dataset_name not in self.DATASET_NAMES:
             raise ValueError(f'dataset_name inválido: {dataset_name}')
         
+        file_name = f'{DATA_PATH}{dataset_name}.tsv.gz'
         endpoint = f'{self.url}{dataset_name}.tsv.gz'
         
         log(f'Baixando dataset {dataset_name} em {endpoint}...')
         
         try:
         
-            file_name = self.http_requests.download(endpoint, compression='gzip')
+            response = self.http_requests.download(endpoint)
             
-        except (FileExistsError) as e:
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+            
+            try:
+                file_name = Decompressor.decompress_gzip(file_name)
+            except (FileExistsError, FileNotFoundError) as e:
+                error(e)
+            
+        except Exception as e:
             error(e)
         
         return file_name
